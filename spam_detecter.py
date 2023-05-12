@@ -36,4 +36,5 @@ def isTextSpam(text):
 
     # Its time to check the model by giving spam and non-spam comments
     d = cv.transform([text]).toarray()
-    return model.predict(d)
+
+    return model.predict(d)[0] == "spam"

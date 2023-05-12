@@ -1,7 +1,7 @@
 from youtube_comments import fetchPostComments
 from text_analyzer import analyzeText
 from spam_detecter import isTextSpam
-
+# AIzaSyDLzoqpEmFqttF3HDprXGR5eXphBUX5lo4 youtube api key
 def printPretty(lines):
     print("---------------------------------------------------------------")
     for line in lines:

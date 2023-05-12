@@ -4,7 +4,7 @@ from review import getVideoStatistics
 
 
 def main():
-    youtube_video_url = "https://www.youtube.com/watch?v=n9XX_zz3bi8"
+    youtube_video_url = "https://www.youtube.com/watch?v=QfGu8Lu4WKw"
 
     comments = getCommentsFiltered(youtube_video_url, 10, True)
     positive_comments_count = len(comments["positive_comments"])

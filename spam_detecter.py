@@ -26,7 +26,7 @@ def isTextSpam(text):
     we can use the Bernoulli Naive Bayes algorithm to train the model:
     """
 
-    cv = CountVectorizer()
+    cv = CountVectorizer(stop_words='english')
     x = cv.fit_transform(x)
     xtrain, xtest, ytrain, ytest = train_test_split(
         x, y, train_size=0.8, random_state=42)

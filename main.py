@@ -4,7 +4,7 @@ from text_analyzer import analyzeText
 from spam_detecter import isTextSpam
 from review import views as review_views
 from review import likes as review_likes
-
+from review import video_link
 global positive_comments_count
 global negative_comments_count
 
@@ -71,7 +71,7 @@ def main():
     global positive_comments_count
     global negative_comments_count
     
-    youtube_video_url = 'https://www.youtube.com/watch?v=1u08QZyjguo'
+    youtube_video_url =  video_link
     comments = getCommentsFiltered(youtube_video_url, 10, True)
     print(json.dumps({"comments": comments, "message": "Successful"}, indent=2))
 

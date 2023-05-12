@@ -23,7 +23,7 @@ def getCommentsFiltered(youtube_video_url, count, sort_by_most_popular):
         comment_text = comment["text"]
         comment_analyze_data = analyzeText(comment_text)
 
-        if isTextSpam:
+        if isTextSpam(comment_text):
             spam_comments.append({
                 "comment": comment,
                 "analytics": comment_analyze_data

@@ -5,9 +5,10 @@ from spam_detecter import isTextSpam
 def main():
     youtube_video_url = 'https://www.youtube.com/watch?v=ZtzAwBzKE7c&ab_channel=SuhaanBhandary'
 
-    dummy = ['Huh, anyway check out this you[tube] channel: kobyoshi02']
+    dummy = ['you won a lottery send me money to claim a lottery']
+
     print(isTextSpam(dummy[0]))
-    return
+    
 
     print("Running the main function")
     comments = fetchPostComments(youtube_video_url, 10, False)

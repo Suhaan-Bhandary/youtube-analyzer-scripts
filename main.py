@@ -1,7 +1,8 @@
 from youtube_comments import fetchPostComments
 from text_analyzer import analyzeText
 from spam_detecter import isTextSpam
-# AIzaSyDLzoqpEmFqttF3HDprXGR5eXphBUX5lo4 youtube api key
+
+
 def printPretty(lines):
     print("---------------------------------------------------------------")
     for line in lines:
@@ -10,13 +11,53 @@ def printPretty(lines):
     print("---------------------------------------------------------------\n")
 
 
-def main():
-    youtube_video_url = 'https://www.youtube.com/watch?v=ZtzAwBzKE7c&ab_channel=SuhaanBhandary'    
-    comments = fetchPostComments(youtube_video_url, 10, False)
+def getCommentsFiltered(youtube_video_url, count, sort_by_most_popular):
+    comments = fetchPostComments(youtube_video_url, count, sort_by_most_popular)
+
+    spam_comments = []
+    positive_comments = []
+    negative_comments = []
+    neutral_comments = []
 
     for comment in comments:
-        if(isTextSpam(comment["text"])):
-            printPretty([comment["text"], analyzeText(comment["text"])])
+        comment_text = comment["text"]
+        comment_analyze_data = analyzeText(comment_text)
+
+        if isTextSpam:
+            spam_comments.append({
+                "comment": comment,
+                "analytics": comment_analyze_data
+            })
+            continue
+
+        if comment_analyze_data["sentiment"] > 0:
+            positive_comments.append({
+                "comment": comment,
+                "analytics": comment_analyze_data
+            })
+        elif comment_analyze_data["sentiment"] < 0:
+            negative_comments.append({
+                "comment": comment,
+                "analytics": comment_analyze_data
+            })
+        else:
+            neutral_comments.append({
+                "comment": comment,
+                "analytics": comment_analyze_data
+            })
+
+    return {
+        "spam_comments": spam_comments,
+        "positive_comments": positive_comments,
+        "negative_comments": negative_comments,
+        "neutral_comments": neutral_comments,
+    }
+
+def main():
+    youtube_video_url = 'https://www.youtube.com/watch?v=1u08QZyjguo'
+    comments = getCommentsFiltered(youtube_video_url, 10, True)
+    printPretty([comments])
+
 
 if __name__ == "__main__":
     main()

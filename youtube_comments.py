@@ -1,4 +1,6 @@
 from itertools import islice
+from text_analyzer import analyzeText
+from spam_detecter import isTextSpam
 from youtube_comment_downloader import *
 
 def fetchPostComments(youtube_video_url, total_comment_count, sort_by_most_popular=False):
@@ -18,4 +20,47 @@ def fetchPostComments(youtube_video_url, total_comment_count, sort_by_most_popul
         comments.append(comment)
 
     return comments
+
+def getCommentsFiltered(youtube_video_url, count, sort_by_most_popular):
+    comments = fetchPostComments(youtube_video_url, count, sort_by_most_popular)
+
+    spam_comments = []
+    positive_comments = []
+    negative_comments = []
+    neutral_comments = []
+
+    for comment in comments:
+        comment_text = comment["text"]
+        comment_analyze_data = analyzeText(comment_text)
+
+        if isTextSpam(comment_text):
+            spam_comments.append({
+                "comment": comment,
+                "analytics": comment_analyze_data
+            })
+            continue
+
+        if comment_analyze_data["sentiment"] > 0:
+            positive_comments.append({
+                "comment": comment,
+                "analytics": comment_analyze_data
+            })
+
+        elif comment_analyze_data["sentiment"] < 0:
+            negative_comments.append({
+                "comment": comment,
+                "analytics": comment_analyze_data
+            })
+        else:
+            neutral_comments.append({
+                "comment": comment,
+                "analytics": comment_analyze_data
+            })
+
+    return {
+        "spam_comments": spam_comments,
+        "positive_comments": positive_comments,
+        "negative_comments": negative_comments,
+        "neutral_comments": neutral_comments,
+    }
 

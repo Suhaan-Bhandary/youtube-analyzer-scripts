@@ -1,84 +1,24 @@
 import json
-from youtube_comments import fetchPostComments
-from text_analyzer import analyzeText
-from spam_detecter import isTextSpam
-from review import views as review_views
-from review import likes as review_likes
-from review import video_link
-global positive_comments_count
-global negative_comments_count
+from youtube_comments import getCommentsFiltered
+from review import getVideoStatistics
 
-positive_comments_count = 0
-negative_comments_count = 0
-
-def printPretty(lines):
-    print("---------------------------------------------------------------")
-    for line in lines:
-        print(line)
-        print()
-    print("---------------------------------------------------------------\n")
-
-
-def getCommentsFiltered(youtube_video_url, count, sort_by_most_popular):
-    global positive_comments_count
-    global negative_comments_count
-    
-    comments = fetchPostComments(youtube_video_url, count, sort_by_most_popular)
-
-    spam_comments = []
-    positive_comments = []
-    negative_comments = []
-    neutral_comments = []
-
-    for comment in comments:
-        comment_text = comment["text"]
-        comment_analyze_data = analyzeText(comment_text)
-
-        if isTextSpam(comment_text):
-            spam_comments.append({
-                "comment": comment,
-                "analytics": comment_analyze_data
-            })
-            continue
-
-        if comment_analyze_data["sentiment"] > 0:
-            positive_comments_count+=1
-            positive_comments.append({
-                "comment": comment,
-                "analytics": comment_analyze_data
-            })
-
-        elif comment_analyze_data["sentiment"] < 0:
-            negative_comments.append({
-                "comment": comment,
-                "analytics": comment_analyze_data
-            })
-            negative_comments_count+=1
-        else:
-            neutral_comments.append({
-                "comment": comment,
-                "analytics": comment_analyze_data
-            })
-
-    return {
-        "spam_comments": spam_comments,
-        "positive_comments": positive_comments,
-        "negative_comments": negative_comments,
-        "neutral_comments": neutral_comments,
-    }
 
 def main():
-    global positive_comments_count
-    global negative_comments_count
-    
-    youtube_video_url =  video_link
-    comments = getCommentsFiltered(youtube_video_url, 10, True)
-    print(json.dumps({"comments": comments, "message": "Successful"}, indent=2))
+    youtube_video_url = "https://www.youtube.com/watch?v=n9XX_zz3bi8"
 
-    if review_likes>=10000 and review_views>=500000 and positive_comments_count>negative_comments_count:
-        print("video is good")
-    else: 
-        print("video is bad")
+    comments = getCommentsFiltered(youtube_video_url, 10, True)
+    positive_comments_count = len(comments["positive_comments"])
+    negative_comments_count = len(comments["negative_comments"])
+
+    video_statistics = getVideoStatistics(youtube_video_url)
+
+    data = {
+        "comments": comments,
+        "isVideoGood": (video_statistics["likes"] >= video_statistics["views"] / 10) and positive_comments_count > negative_comments_count,
+        "message": "Successful"
+    }
+
+    print(json.dumps(data, indent=2))
 
 
 if __name__ == "__main__":

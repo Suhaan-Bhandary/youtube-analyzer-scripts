@@ -1,3 +1,4 @@
+import json
 from youtube_comments import fetchPostComments
 from text_analyzer import analyzeText
 from spam_detecter import isTextSpam
@@ -56,7 +57,7 @@ def getCommentsFiltered(youtube_video_url, count, sort_by_most_popular):
 def main():
     youtube_video_url = 'https://www.youtube.com/watch?v=1u08QZyjguo'
     comments = getCommentsFiltered(youtube_video_url, 10, True)
-    printPretty([comments])
+    print(json.dumps({"comments": comments, "message": "Successful"}, indent=2))
 
 
 if __name__ == "__main__":

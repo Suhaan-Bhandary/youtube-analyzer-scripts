@@ -14,7 +14,7 @@ def main():
 
     data = {
         "comments": comments,
-        "isVideoGood": (video_statistics["likes"] >= video_statistics["views"] / 10) and positive_comments_count > negative_comments_count,
+        "isVideoGood": (video_statistics["likes"] >= video_statistics["views"] / 1000) and positive_comments_count > negative_comments_count,
         "message": "Successful"
     }
 
